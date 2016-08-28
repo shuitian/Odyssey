@@ -17,14 +17,9 @@ public class Building : HArmorFightCharacter {
 	
 	}
 
-    public void SetBuilding(int id)
+    [ContextMenu("UpdateInfo")]
+    public void SetBuilding()
     {
-        //CharacterComponent[] components = GetComponents<CharacterComponent>();
-        //foreach(CharacterComponent com in components)
-        //{
-
-        //}
-        //Building building =  Data.GetBuildingFromDatabase(id);
-        //this.hpComponent.baseMaxHp = building.hpComponent.baseMaxHp;
+        Sql.SetHpComponentData(hpComponent, id);
     }
 }
