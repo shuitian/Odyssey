@@ -10,7 +10,7 @@ public enum CellType
 
 public class Cell : MonoBehaviour {
 
-    public SpriteRenderer backgroung;
+    public Image backgroung;
     public SpriteRenderer building;
     public GameObject goldTextObj;
     public Text goldText;
@@ -44,5 +44,10 @@ public class Cell : MonoBehaviour {
         {
             goldTextObj.SetActive(false);
         }
+    }
+
+    public void OnClickCell()
+    {
+        CoreCell.instance.OnClickCell((int)transform.localPosition.x, (int)transform.localPosition.y);
     }
 }

@@ -38,7 +38,7 @@ class sql(object):
 				s = s + "," + str(cell)
 			elif type(cell) is unicode:
 				s = s + "," + cell.encode("utf-8")
-		s = s + ") VALUES(NULL"
+		s = s + ") VALUES(" + str(table.cell(i,0).value) 
 		for j in xrange(1,ncols):
 			cell = table.cell(i,j).value 
 

@@ -3,6 +3,7 @@ using System;
 using Mono.Data.Sqlite;
 using Libgame;
 using Libgame.Components;
+using System.Collections.Generic;
 
 public class Sql : MonoBehaviour
 {
@@ -58,7 +59,7 @@ public class Sql : MonoBehaviour
         }
         dbConnection = null;
         Debug.Log("Disconnected from db.");
-        MonoBehaviour.print("Disconnected from db.");
+        //MonoBehaviour.print("Disconnected from db.");
     }
 
     static public SqliteDataReader ExecuteQuery(string sqlQuery)
@@ -173,5 +174,23 @@ public class Sql : MonoBehaviour
             SetMoveComponentData(building.moveComponent, int.Parse(reader.GetString(8)));
         }
         reader.Dispose();
+    }
+
+    static public Dictionary<int,string> GetResourceData()
+    {
+        Dictionary<int, string> resourceNames = new Dictionary<int, string>();
+        string query = "SELECT * FROM resources";
+        reader = ExecuteQuery(query);
+        while (reader.Read())
+        {
+            int id = reader.GetInt32(0);
+            string name = reader.GetString(1);
+            if (!resourceNames.ContainsKey(id))
+            {
+                resourceNames.Add(id, name);
+            }
+        }
+        reader.Dispose();
+        return resourceNames;
     }
 }

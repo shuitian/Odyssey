@@ -3,13 +3,24 @@ using System.Collections;
 
 public class CoreCell : Cell {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    static public CoreCell instance;
+    public GameObject border;
+    void Awake()
+    {
+        instance = this;
+    }
+
+    public void OnClickCell(int x,int y)
+    {
+        if (border != null)
+        {
+            border.transform.position = new Vector2(x, y);
+            border.SetActive(true);
+        }
+    }
+
+	public void BuyCell(int x, int y)
+    {
+        
+    }
 }
