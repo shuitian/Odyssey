@@ -43,7 +43,7 @@ class sql(object):
 			cell = table.cell(i,j).value 
 
 			if type(cell) is float:
-				s = s + ",'" + str(cell) + "'"
+				s = s + ",'" + str(int(cell)) + "'"
 			elif type(cell) is unicode:
 				s = s + ",'" + cell + "'"
 			# print cell

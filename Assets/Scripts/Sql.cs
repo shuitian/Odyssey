@@ -70,6 +70,13 @@ public class Sql : MonoBehaviour
         return reader;
     }
 
+    static public void ExecuteNonQuery(string sqlQuery)
+    {
+        dbCommand = OpenDB("database.db").CreateCommand();
+        dbCommand.CommandText = sqlQuery;
+        dbCommand.ExecuteNonQuery();
+    }
+
     static public void SetHpComponentData(HpComponent hpComponent, int id)
     {
         string query = "SELECT * FROM hp where id = " + id;
@@ -192,5 +199,54 @@ public class Sql : MonoBehaviour
         }
         reader.Dispose();
         return resourceNames;
+    }
+
+    static public int[,] GetMap()
+    {
+        int[,] map = new int[SpaceShip.shipSize, SpaceShip.shipSize];
+        string query = "SELECT * FROM map";
+        reader = ExecuteQuery(query);
+        while (reader.Read())
+        {
+            int x = (int)float.Parse(reader.GetString(1));
+            int y = (int)float.Parse(reader.GetString(2));
+            int flag = (int)float.Parse(reader.GetString(3));
+            map[x, y] = flag;
+        }
+        reader.Dispose();
+        return map;
+    }
+
+    static public int GetCellPrice(int id)
+    {
+        int price = 0;
+        string query = "SELECT * FROM cell_price where id = " + id;
+        reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            price = int.Parse(reader.GetString(1));
+        }
+        reader.Dispose();
+        return price;
+    }
+
+    static public int[] GetCellPrices()
+    {
+        int[] prices = new int[SpaceShip.shipSize * SpaceShip.shipSize - 3 * 3];
+        string query = "SELECT * FROM cell_price";
+        reader = ExecuteQuery(query);
+        int k = 0;
+        while (reader.Read())
+        {
+            prices[k++] = (int)float.Parse(reader.GetString(1));
+        }
+        reader.Dispose();
+        return prices;
+    }
+
+    static public void UpdateCell(int x, int y, CellType type)
+    {
+        string query = "UPDATE map SET flag = '" + (int)type + "' where x = '" + x + "' and y = '" + y + "'";
+        ExecuteNonQuery(query);
     }
 }
