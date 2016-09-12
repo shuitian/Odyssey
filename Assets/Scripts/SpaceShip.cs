@@ -117,11 +117,14 @@ public class SpaceShip : MonoBehaviour {
         {
             int x1 = x + addedValues[i, 0];
             int y1 = y + addedValues[i, 1];
-            if (SpaceShip.shipCells[x1, y1] == (int)CellType.CanNotBuy)
+            if (x1 >= 0 && x1 < shipSize && y1 >= 0 && y1 < shipSize)
             {
-                SpaceShip.shipCells[x1, y1] = (int)CellType.CanBuy;
-                CreateCanBuyBorder(x1, y1);
-                Sql.UpdateCell(x1, y1, CellType.CanBuy);
+                if (SpaceShip.shipCells[x1, y1] == (int)CellType.CanNotBuy)
+                {
+                    SpaceShip.shipCells[x1, y1] = (int)CellType.CanBuy;
+                    CreateCanBuyBorder(x1, y1);
+                    Sql.UpdateCell(x1, y1, CellType.CanBuy);
+                }
             }
         }
     }

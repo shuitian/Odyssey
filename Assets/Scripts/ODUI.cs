@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ODUI : MonoBehaviour {
 
     static public ODUI instance;
     public GameObject buyButton;
     public GameObject showBuyButton;
+    public GameObject buildingButton;
     void Awake()
     {
         instance = this;
@@ -26,5 +28,21 @@ public class ODUI : MonoBehaviour {
         }
         if (showBuyButton)
             showBuyButton.SetActive(!flag);
+    }
+
+    public void OnClickShowBuildingButton(bool flag)
+    {
+        if (buildingButton)
+            buildingButton.SetActive(flag);
+        OnClickShowBuyButton(!flag);
+    }
+
+    public Text goldNumText;
+    public void UpdateGoldNum(int num)
+    {
+        if (goldNumText)
+        {
+            goldNumText.text = num + "";
+        }
     }
 }

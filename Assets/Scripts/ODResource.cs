@@ -19,12 +19,15 @@ public class ODResource : MonoBehaviour {
         }
     }
 
+    Dictionary<int, float> currentResources;
     void Awake()
     {
-        //foreach(var item in resourceNames)
-        //{
-        //    print(item.Key + "=>" + item.Value);
-        //}
+        currentResources = Sql.GetCurrentResources();
+    }
+
+    void Start()
+    {
+        Player.instance.SetCurrentResource(currentResources);
     }
 
     void OnDestroy()

@@ -3,6 +3,7 @@ using System;
 using Mono.Data.Sqlite;
 using Libgame;
 using Libgame.Components;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Sql : MonoBehaviour
@@ -84,11 +85,11 @@ public class Sql : MonoBehaviour
         if (reader.Read())
         {
             hpComponent.baseMaxHp = float.Parse(reader.GetString(1));
-            hpComponent.ChangeMaxHp(float.Parse(reader.GetString(2)), float.Parse(reader.GetString(3)));
+            hpComponent.ChangeMaxPoint(float.Parse(reader.GetString(2)), float.Parse(reader.GetString(3)));
             hpComponent.minMaxHp = float.Parse(reader.GetString(5));
             hpComponent.maxMaxHp = float.Parse(reader.GetString(6));
             hpComponent.baseHpRecover = float.Parse(reader.GetString(7));
-            hpComponent.ChangeHpRecover(float.Parse(reader.GetString(8)), float.Parse(reader.GetString(9)));
+            hpComponent.ChangePointRecover(float.Parse(reader.GetString(8)), float.Parse(reader.GetString(9)));
         }
         reader.Dispose();
     }
@@ -248,5 +249,36 @@ public class Sql : MonoBehaviour
     {
         string query = "UPDATE map SET flag = '" + (int)type + "' where x = '" + x + "' and y = '" + y + "'";
         ExecuteNonQuery(query);
+    }
+
+    static public ArrayList GetStartPokemons()
+    {
+        ArrayList pokemons = new ArrayList();
+        string query = "SELECT id FROM buildings where start_choose = '1'";
+        reader = ExecuteQuery(query);
+        while (reader.Read())
+        {
+            pokemons.Add(reader.GetInt32(0));
+        }
+        reader.Dispose();
+        return pokemons;
+    }
+
+    static public Dictionary<int,float> GetCurrentResources()
+    {
+        Dictionary<int, float> resourceNums = new Dictionary<int, float>();
+        string query = "SELECT * FROM resources";
+        reader = ExecuteQuery(query);
+        while (reader.Read())
+        {
+            int id = reader.GetInt32(0);
+            float num = float.Parse(reader.GetString(3));
+            if (!resourceNums.ContainsKey(id))
+            {
+                resourceNums.Add(id, num);
+            }
+        }
+        reader.Dispose();
+        return resourceNums;
     }
 }
