@@ -2,11 +2,12 @@
 using System.Collections;
 using Libgame.Characters;
 using Libgame.Components;
-using Libgame;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(NeverMoveComponent))]
-public class Building : HArmorFightCharacter {
-
+public class Building : Pokemon
+{
+    public SpriteRenderer spriteRenderer;
 	// Use this for initialization
 	void Start () {
 	    
@@ -20,6 +21,10 @@ public class Building : HArmorFightCharacter {
     [ContextMenu("UpdateInfo")]
     public void SetBuilding()
     {
-        Sql.SetHpComponentData(hpComponent, id);
+        if (spriteRenderer)
+        {
+            spriteRenderer.sprite = ODResource.pokemonIcons[id];
+        }
+        Sql.SetPokemonData(this, id);
     }
 }

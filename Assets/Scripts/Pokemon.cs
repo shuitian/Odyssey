@@ -2,7 +2,7 @@
 using System.Collections;
 using Libgame.Characters;
 
-public class Monster : HArmorFightCharacter{
+public class Pokemon : HArmorFightCharacter {
 
 	// Use this for initialization
 	void Start () {

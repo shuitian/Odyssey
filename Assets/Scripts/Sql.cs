@@ -142,7 +142,7 @@ public class Sql : MonoBehaviour
             attackComponent.attackSpeed.attackSpeed = float.Parse(reader.GetString(5));
         }
         reader.Dispose();
-        query = "SELECT * FROM attack_dis where id = " + attackDisId;
+        query = "SELECT * FROM att_dis where id = " + attackDisId;
         reader = ExecuteQuery(query);
         if (reader.Read())
         {
@@ -152,34 +152,34 @@ public class Sql : MonoBehaviour
         reader.Dispose();
     }
 
-    static public void SetMonsterData(Monster monster, int id)
-    {
-        string query = "SELECT * FROM monsters where id = " + id;
-        reader = ExecuteQuery(query);
-        if (reader.Read())
-        {
-            monster.characterName = reader.GetString(1);
-            monster.introduction = reader.GetString(2);
-            SetHpComponentData(monster.hpComponent, int.Parse(reader.GetString(3)));
-            SetAttackComponentData(monster.attackComponent, int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)), int.Parse(reader.GetString(6)));
-            SetHArmorComponentData((HyperbolaArmorComponent)monster.armorComponent, int.Parse(reader.GetString(7)));
-            SetMoveComponentData(monster.moveComponent, int.Parse(reader.GetString(8)));
-        }
-        reader.Dispose();
-    }
+    //static public void SetMonsterData(Monster monster, int id)
+    //{
+    //    string query = "SELECT * FROM pokemons where id = " + id;
+    //    reader = ExecuteQuery(query);
+    //    if (reader.Read())
+    //    {
+    //        monster.characterName = reader.GetString(1);
+    //        monster.introduction = reader.GetString(2);
+    //        SetHpComponentData(monster.hpComponent, int.Parse(reader.GetString(3)));
+    //        SetAttackComponentData(monster.attackComponent, int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)), int.Parse(reader.GetString(6)));
+    //        SetHArmorComponentData((HyperbolaArmorComponent)monster.armorComponent, int.Parse(reader.GetString(7)));
+    //        SetMoveComponentData(monster.moveComponent, int.Parse(reader.GetString(8)));
+    //    }
+    //    reader.Dispose();
+    //}
 
-    static public void SetBuildingData(Building building, int id)
+    static public void SetPokemonData(Pokemon pokemon, int id)
     {
-        string query = "SELECT * FROM buildings where id = " + id;
-        reader = ExecuteQuery(query);
+        string query = "SELECT * FROM pokemons where id = " + id;
+        SqliteDataReader reader = ExecuteQuery(query);
         if (reader.Read())
         {
-            building.characterName = reader.GetString(1);
-            building.introduction = reader.GetString(2);
-            SetHpComponentData(building.hpComponent, int.Parse(reader.GetString(3)));
-            SetAttackComponentData(building.attackComponent, int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)), int.Parse(reader.GetString(6)));
-            SetHArmorComponentData((HyperbolaArmorComponent)building.armorComponent, int.Parse(reader.GetString(7)));
-            SetMoveComponentData(building.moveComponent, int.Parse(reader.GetString(8)));
+            pokemon.characterName = reader.GetString(1);
+            pokemon.introduction = reader.GetString(2);
+            SetHpComponentData(pokemon.hpComponent, int.Parse(reader.GetString(3)));
+            SetAttackComponentData(pokemon.attackComponent, int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)), int.Parse(reader.GetString(6)));
+            SetHArmorComponentData((HyperbolaArmorComponent)pokemon.armorComponent, int.Parse(reader.GetString(7)));
+            SetMoveComponentData(pokemon.moveComponent, int.Parse(reader.GetString(8)));
         }
         reader.Dispose();
     }
@@ -251,10 +251,10 @@ public class Sql : MonoBehaviour
         ExecuteNonQuery(query);
     }
 
-    static public ArrayList GetStartPokemons()
+    static public ArrayList GetStartPokemonsID()
     {
         ArrayList pokemons = new ArrayList();
-        string query = "SELECT id FROM buildings where start_choose = '1'";
+        string query = "SELECT id FROM pokemon_upgrate where start_choose = '1'";
         reader = ExecuteQuery(query);
         while (reader.Read())
         {
@@ -280,5 +280,44 @@ public class Sql : MonoBehaviour
         }
         reader.Dispose();
         return resourceNums;
+    }
+
+    static public ArrayList GetPokedex()
+    {
+        ArrayList dex = new ArrayList();
+
+        //ArrayList pokemons = new ArrayList();
+        //string query = "SELECT id FROM pokemon_upgrate where start_choose = '1'";
+        //reader = ExecuteQuery(query);
+        //while (reader.Read())
+        //{
+        //    pokemons.Add(reader.GetInt32(0));
+        //}
+        //reader.Dispose();
+        return dex;
+    }
+
+    static public void ClearPokemons()
+    {
+        string query = "UPDATE pokemons SET owned = '0'";
+        ExecuteNonQuery(query);
+    }
+
+    static public void OwnPokemon(int pokemonId)
+    {
+        string query = "UPDATE pokemons SET owned = '1' where id = " + pokemonId;
+        ExecuteNonQuery(query);
+    }
+
+    static public void ClearSpaceShip()
+    {
+        string query = "UPDATE map SET flag = backup";
+        ExecuteNonQuery(query);
+    }
+
+    static public void InitResource()
+    {
+        string query = "UPDATE resources SET currentOwn = ownAtFirst";
+        ExecuteNonQuery(query);
     }
 }

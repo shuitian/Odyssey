@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public enum CellType
 {
-    CanNotBuy = -1,
     CanBuy = 0,
-    Buyed = 1,
-    Core = 2
+    CanNotBuy = -1,
+    Buyed = -2,
+    Core = -3
 }
 
 public class Cell : MonoBehaviour {
@@ -75,6 +75,7 @@ public class Cell : MonoBehaviour {
             SpaceShip.instance.MoveCellToBuyedList(gameObject);
             SpaceShip.instance.CreateCellsNearBy(x, y);
             SpaceShip.instance.UpdateAllCellPrice();
+            OnClickCell();
         }
         else
         {

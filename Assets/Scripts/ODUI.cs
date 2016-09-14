@@ -21,11 +21,13 @@ public class ODUI : MonoBehaviour {
 
     public void OnClickShowBuyButton(bool flag)
     {
-        if (flag == false)
+        if (flag == false && (SpaceShip.currentCell == null || SpaceShip.currentCell.cellType == CellType.CanBuy)) 
         {
             SpaceShip.instance.MoveBorder(0, 0, false);
-            ShowBuyButton(false);
         }
+        ShowBuyButton(flag);
+        OnClickShowBuildingButton(flag);
+
         if (showBuyButton)
             showBuyButton.SetActive(!flag);
     }
@@ -34,7 +36,7 @@ public class ODUI : MonoBehaviour {
     {
         if (buildingButton)
             buildingButton.SetActive(flag);
-        OnClickShowBuyButton(!flag);
+        //OnClickShowBuyButton(!flag);
     }
 
     public Text goldNumText;

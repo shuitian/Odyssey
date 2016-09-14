@@ -14,7 +14,6 @@ public class GoldResource : SingleNoRecoverResourceComponent
 
     void UpdateGoldNum(float before, float after)
     {
-        print(123);
         ODUI.instance.UpdateGoldNum((int)after);
     }
 }

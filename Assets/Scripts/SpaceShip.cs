@@ -19,12 +19,29 @@ public class SpaceShip : MonoBehaviour {
         instance = this;
         canBuyList = new ArrayList();
         cellPrice = Sql.GetCellPrices();
-        shipCells = Sql.GetMap();
         initShip();
     }
 
-    void initShip()
+    void ClearExistCells()
     {
+        int num = buyedListobj.transform.childCount;
+        for(int i = 0;i< num; i++)
+        {
+            ObjectPool.Destroy(buyedListobj.transform.GetChild(i).gameObject);
+        }
+        num = canBuyListObj.transform.childCount;
+        for (int i = 0; i < num; i++)
+        {
+            ObjectPool.Destroy(canBuyListObj.transform.GetChild(i).gameObject);
+        }
+        canBuyList.Clear();
+    }
+
+    public void initShip()
+    {
+        ClearExistCells();
+        shipCells = Sql.GetMap();
+        ownedCellNum = 0;
         for (int i = 0; i < shipSize; ++i)
         {
             for (int j = 0; j < shipSize; ++j)

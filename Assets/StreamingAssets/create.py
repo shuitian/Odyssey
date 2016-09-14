@@ -25,7 +25,7 @@ class sql(object):
 			s = s + ",\n\t" + cell.encode("utf-8") + " TEXT NOT NULL"
 			# print cell
 		s = s + "\n);"
-		print s
+		# print s
 		self.conn.execute(s)
 
 	def insert_monster(self, table, i):
@@ -49,7 +49,7 @@ class sql(object):
 			# print cell
 		
 		s = s + ");"
-		print s.encode("utf-8")
+		# print s.encode("utf-8")
 		self.conn.execute(s)
 		self.conn.commit()
 
