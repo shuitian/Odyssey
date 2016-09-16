@@ -47,4 +47,19 @@ public class ODUI : MonoBehaviour {
             goldNumText.text = num + "";
         }
     }
+
+    public GameObject firstStartPanel;
+    public void ShowFirstStartPanel(bool flag)
+    {
+        if (firstStartPanel)
+        {
+            firstStartPanel.SetActive(flag);
+        }
+        //Pokedex.instance.SetStartPokemons();
+    }
+
+    public void SetStartPokemons(ArrayList pokemons)
+    {
+
+    }
 }

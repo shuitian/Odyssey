@@ -61,6 +61,8 @@ s = sql();
 data = xlrd.open_workbook("monsters.xlsx")
 tables =  data.sheets()
 for table in tables:
+	if table.name == "setting":
+		continue
 	print table.name
 	s.create_table(table)
 	nrows = table.nrows

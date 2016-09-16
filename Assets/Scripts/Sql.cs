@@ -13,6 +13,13 @@ public class Sql : MonoBehaviour
     static SqliteCommand dbCommand;
     static SqliteDataReader reader;
     // Use this for initialization
+    static public Dictionary<string,int> setting
+    {
+        get
+        {
+            return ODGame.settingDic;
+        }
+    }
 
     static public SqliteConnection OpenDB(string dbName)
     {
@@ -85,11 +92,12 @@ public class Sql : MonoBehaviour
         if (reader.Read())
         {
             hpComponent.baseMaxHp = float.Parse(reader.GetString(1));
-            hpComponent.ChangeMaxPoint(float.Parse(reader.GetString(2)), float.Parse(reader.GetString(3)));
-            hpComponent.minMaxHp = float.Parse(reader.GetString(5));
-            hpComponent.maxMaxHp = float.Parse(reader.GetString(6));
-            hpComponent.baseHpRecover = float.Parse(reader.GetString(7));
-            hpComponent.ChangePointRecover(float.Parse(reader.GetString(8)), float.Parse(reader.GetString(9)));
+            hpComponent.baseHpRecover = float.Parse(reader.GetString(2));
+
+            hpComponent.ChangeMaxPoint(setting["maxHpAddedValue"], setting["maxHpRate"]);
+            hpComponent.minMaxHp = setting["minMaxHp"];
+            hpComponent.maxMaxHp = setting["maxMaxHp"];
+            hpComponent.ChangePointRecover(setting["hpRecoverAddedValue"], setting["hpRecoverRate"]);
         }
         reader.Dispose();
     }
@@ -100,11 +108,11 @@ public class Sql : MonoBehaviour
         reader = ExecuteQuery(query);
         if (reader.Read())
         {
-            hArmorComponent.minArmor = float.Parse(reader.GetString(1));
-            hArmorComponent.maxArmor = float.Parse(reader.GetString(2));
-            hArmorComponent.damageModifiedValue = float.Parse(reader.GetString(3));
-            hArmorComponent.armorList.baseArmorList = new float[1] { float.Parse(reader.GetString(4)) };
-            hArmorComponent.armorList.armorAddedValueList = new float[1] { float.Parse(reader.GetString(5)) };
+            hArmorComponent.minArmor = setting["minHArmor"];
+            hArmorComponent.maxArmor = setting["maxHArmor"];
+            hArmorComponent.damageModifiedValue = setting["damageHArmorModifiedValue"];
+            hArmorComponent.armorList.baseArmorList = new float[1] { float.Parse(reader.GetString(1)) };
+            hArmorComponent.armorList.armorAddedValueList = new float[1] { setting["armorAddedValue"] };
         }
         reader.Dispose();
     }
@@ -115,9 +123,9 @@ public class Sql : MonoBehaviour
         reader = ExecuteQuery(query);
         if (reader.Read())
         {
-            moveComponent.SetMoveSpeed(float.Parse(reader.GetString(1)), float.Parse(reader.GetString(2)), float.Parse(reader.GetString(3)));
-            moveComponent.minMoveSpeed = float.Parse(reader.GetString(4));
-            moveComponent.maxMoveSpeed = float.Parse(reader.GetString(5));
+            moveComponent.SetMoveSpeed(float.Parse(reader.GetString(1)), setting["moveSpeedAddedvalue"], setting["moveSpeedAddedRate"]);
+            moveComponent.minMoveSpeed = setting["minMoveSpeed"];
+            moveComponent.maxMoveSpeed = setting["maxMoveSpeed"];
         }
         reader.Dispose();
     }
@@ -136,10 +144,10 @@ public class Sql : MonoBehaviour
         if (reader.Read())
         {
             attackComponent.attackSpeed.baseAttackInterval = float.Parse(reader.GetString(1));
-            attackComponent.attackSpeed.timeModifiedValue = float.Parse(reader.GetString(2));
-            attackComponent.attackSpeed.minAttackSpeed = float.Parse(reader.GetString(3));
-            attackComponent.attackSpeed.maxAttackSpeed = float.Parse(reader.GetString(4));
-            attackComponent.attackSpeed.attackSpeed = float.Parse(reader.GetString(5));
+            attackComponent.attackSpeed.timeModifiedValue = setting["attackSpeedTimeModifiedValue"];
+            attackComponent.attackSpeed.minAttackSpeed = setting["minAttackSpeed"];
+            attackComponent.attackSpeed.maxAttackSpeed = setting["maxAttackSpeed"];
+            attackComponent.attackSpeed.attackSpeed = setting["baseAttackSpeed"];
         }
         reader.Dispose();
         query = "SELECT * FROM att_dis where id = " + attackDisId;
@@ -152,21 +160,83 @@ public class Sql : MonoBehaviour
         reader.Dispose();
     }
 
-    //static public void SetMonsterData(Monster monster, int id)
-    //{
-    //    string query = "SELECT * FROM pokemons where id = " + id;
-    //    reader = ExecuteQuery(query);
-    //    if (reader.Read())
-    //    {
-    //        monster.characterName = reader.GetString(1);
-    //        monster.introduction = reader.GetString(2);
-    //        SetHpComponentData(monster.hpComponent, int.Parse(reader.GetString(3)));
-    //        SetAttackComponentData(monster.attackComponent, int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)), int.Parse(reader.GetString(6)));
-    //        SetHArmorComponentData((HyperbolaArmorComponent)monster.armorComponent, int.Parse(reader.GetString(7)));
-    //        SetMoveComponentData(monster.moveComponent, int.Parse(reader.GetString(8)));
-    //    }
-    //    reader.Dispose();
-    //}
+    static public void SetHpData(PokedexItem item, int id)
+    {
+        string query = "SELECT * FROM hp where id = " + id;
+        reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            item.maxHp = float.Parse(reader.GetString(1));
+            item.hpRecover = float.Parse(reader.GetString(2));
+        }
+        reader.Dispose();
+    }
+
+    static public void SetHArmorData(PokedexItem item, int id)
+    {
+        string query = "SELECT * FROM h_armor where id = " + id;
+        reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            item.armor = float.Parse(reader.GetString(1));
+            item.armor = HyperbolaArmorComponent.CalculateDamageDerates(setting["damageHArmorModifiedValue"], new float[1] { item.armor })[0];
+        }
+        reader.Dispose();
+    }
+
+    static public void SetMoveData(PokedexItem item, int id)
+    {
+        string query = "SELECT * FROM move where id = " + id;
+        reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            item.moveSpeed = float.Parse(reader.GetString(1));
+        }
+        reader.Dispose();
+    }
+
+    static public void SetAttackData(PokedexItem item, int attackId, int attackSpeedId, int attackDisId)
+    {
+        string query = "SELECT * FROM attack where id = " + attackId;
+        reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            item.attack = new float[1] { float.Parse(reader.GetString(1)) }[0];
+        }
+        reader.Dispose();
+        query = "SELECT * FROM attackspeed where id = " + attackSpeedId;
+        reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            item.attackInterval = AttackSpeed.GetAttackInterval(float.Parse(reader.GetString(1)), setting["attackSpeedTimeModifiedValue"], setting["baseAttackSpeed"]);
+        }
+        reader.Dispose();
+        query = "SELECT * FROM att_dis where id = " + attackDisId;
+        reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            item.minAttackDis = float.Parse(reader.GetString(1));
+            item.maxAttackDis = float.Parse(reader.GetString(2));
+        }
+        reader.Dispose();
+    }
+
+    static public PokedexItem GetPokedexItemById(int id)
+    {
+        PokedexItem item = new PokedexItem();
+        string query = "SELECT * FROM pokemons where id = " + id;
+        SqliteDataReader reader = ExecuteQuery(query);
+        if (reader.Read())
+        {
+            item.characterName = reader.GetString(1);
+            SetHpData(item, int.Parse(reader.GetString(2)));
+            SetAttackData(item, int.Parse(reader.GetString(3)), int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)));
+            SetHArmorData(item, int.Parse(reader.GetString(6)));
+            SetMoveData(item, int.Parse(reader.GetString(7)));
+        }
+        reader.Dispose();
+        return item;
+    }
 
     static public void SetPokemonData(Pokemon pokemon, int id)
     {
@@ -175,11 +245,10 @@ public class Sql : MonoBehaviour
         if (reader.Read())
         {
             pokemon.characterName = reader.GetString(1);
-            pokemon.introduction = reader.GetString(2);
-            SetHpComponentData(pokemon.hpComponent, int.Parse(reader.GetString(3)));
-            SetAttackComponentData(pokemon.attackComponent, int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)), int.Parse(reader.GetString(6)));
-            SetHArmorComponentData((HyperbolaArmorComponent)pokemon.armorComponent, int.Parse(reader.GetString(7)));
-            SetMoveComponentData(pokemon.moveComponent, int.Parse(reader.GetString(8)));
+            SetHpComponentData(pokemon.hpComponent, int.Parse(reader.GetString(2)));
+            SetAttackComponentData(pokemon.attackComponent, int.Parse(reader.GetString(3)), int.Parse(reader.GetString(4)), int.Parse(reader.GetString(5)));
+            SetHArmorComponentData((HyperbolaArmorComponent)pokemon.armorComponent, int.Parse(reader.GetString(6)));
+            SetMoveComponentData(pokemon.moveComponent, int.Parse(reader.GetString(7)));
         }
         reader.Dispose();
     }
@@ -295,6 +364,20 @@ public class Sql : MonoBehaviour
         //}
         //reader.Dispose();
         return dex;
+    }
+
+    static public ArrayList GetStartPokemons()
+    {
+        ArrayList pokemons = new ArrayList();
+        string query = "SELECT id FROM pokemon_upgrate where start_choose = '1'";
+        SqliteDataReader _reader = ExecuteQuery(query);
+        while (_reader.Read())
+        {
+            PokedexItem item = GetPokedexItemById(_reader.GetInt32(0));
+            pokemons.Add(item);
+        }
+        _reader.Dispose();
+        return pokemons;
     }
 
     static public void ClearPokemons()

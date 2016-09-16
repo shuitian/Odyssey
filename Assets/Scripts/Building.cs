@@ -23,7 +23,7 @@ public class Building : Pokemon
     {
         if (spriteRenderer)
         {
-            spriteRenderer.sprite = ODResource.pokemonIcons[id];
+            spriteRenderer.sprite = Pokedex.pokemonIcons[id];
         }
         Sql.SetPokemonData(this, id);
     }

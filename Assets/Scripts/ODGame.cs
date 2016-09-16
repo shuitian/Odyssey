@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class ODGame : MonoBehaviour {
 
@@ -19,25 +21,45 @@ public class ODGame : MonoBehaviour {
     {
         Debug.Log("正在清楚用户信息中，请稍候");
         isFirstStart = true;
-        ClearPokemons();
-        ClearSpaceShip();
-        InitResource();
+        Sql.ClearPokemons();
+        Sql.ClearSpaceShip();
+        Sql.InitResource();
         Application.LoadLevel(Application.loadedLevel);
         Debug.Log("清楚用户信息成功");
     }
 
-    void ClearPokemons()
+    public GameObject firstStartPanel;
+    void Start()
     {
-        Sql.ClearPokemons();
+        if (isFirstStart)
+        {
+            ODUI.instance.ShowFirstStartPanel(isFirstStart);
+        }
     }
 
-    void ClearSpaceShip()
+    static Dictionary<string, int> _settingDic = new Dictionary<string, int>();
+    static bool settingFlag = false;
+    static public Dictionary<string, int> settingDic
     {
-        Sql.ClearSpaceShip();
+        get
+        {
+            if (!settingFlag)
+            {
+                LoadSetting();
+                settingFlag = true;
+            }
+            return _settingDic;
+        }
     }
-
-    void InitResource()
+    static void LoadSetting()
     {
-        Sql.InitResource();
+        TextAsset txt = Resources.Load<TextAsset>("Bytes/setting");
+        JObject jo = (JObject)JsonConvert.DeserializeObject(txt.text);
+        IEnumerable<JProperty> properties = jo.Properties();
+        foreach(JProperty jp in properties)
+        {
+            int value = int.Parse(jp.Value.ToString());
+            _settingDic[jp.Name] = value;
+        }
     }
 }
