@@ -179,7 +179,7 @@ public class Sql : MonoBehaviour
         if (reader.Read())
         {
             item.armor = float.Parse(reader.GetString(1));
-            item.armor = HyperbolaArmorComponent.CalculateDamageDerates(setting["damageHArmorModifiedValue"], new float[1] { item.armor })[0];
+            item.damageDerate = HyperbolaArmorComponent.CalculateDamageDerates(setting["damageHArmorModifiedValue"], new float[1] { item.armor })[0];
         }
         reader.Dispose();
     }
@@ -224,6 +224,7 @@ public class Sql : MonoBehaviour
     static public PokedexItem GetPokedexItemById(int id)
     {
         PokedexItem item = new PokedexItem();
+        item.id = id;
         string query = "SELECT * FROM pokemons where id = " + id;
         SqliteDataReader reader = ExecuteQuery(query);
         if (reader.Read())

@@ -59,21 +59,55 @@ public class PokedexItem
 
 public class Pokedex : MonoBehaviour {
 
+    public PokedexItem this[int index]
+    {
+        get
+        {
+            if (index < maxLength)
+            {
+                if(pokemons[index] == null)
+                {
+                    
+                }
+                return pokemons[index];
+            }
+            else
+            {
+                Debug.LogError("Get index: " + index + " from Pokedex error! The Length is " + maxLength + "!");
+                return null;
+            }
+        }
+    }
+
     public const int maxLength = 151;
     public static PokemonIcon pokemonIcons = new PokemonIcon();
-    public ArrayList startPokemons = new ArrayList();
-    public ArrayList pokemons = new ArrayList();
+    public PokedexItem[] startPokemons;
+    public ArrayList startPokemonsID;
+    public PokedexItem[] pokemons = new PokedexItem[maxLength];
     public static Pokedex instance;
     void Awake()
     {
         instance = this;
+        startPokemonsID = Sql.GetStartPokemonsID();
+        startPokemons = new PokedexItem[startPokemonsID.Count];
+        for (int i = 0; i < startPokemonsID.Count; i++) 
+        {
+            startPokemons[i] = Sql.GetPokedexItemById((int)startPokemonsID[i]);
+        }
     }
 
     public void SetStartPokemons()
     {
         //ArrayList startPokemonsID = Sql.GetStartPokemonsID();
-        startPokemons = Sql.GetStartPokemons();
+        //startPokemons = Sql.GetStartPokemons();
         ODUI.instance.SetStartPokemons(startPokemons);
+    }
+
+    public void ChooseStartPokemon(PokedexItem item)
+    {
+        ODGame.isFirstStart = false;
+        print("你选择了 " + item.characterName + " 作为你的初始神奇宝贝！");
+        ODUI.instance.ShowFirstStartPanel(false);
     }
 }
 

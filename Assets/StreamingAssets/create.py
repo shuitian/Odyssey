@@ -43,13 +43,16 @@ class sql(object):
 			cell = table.cell(i,j).value 
 
 			if type(cell) is float:
-				s = s + ",'" + str(int(cell)) + "'"
+				if float(int(cell)) == cell:
+					s = s + ",'" + str(int(cell)) + "'"
+				else:
+					s = s + ",'" + str(cell) + "'"
 			elif type(cell) is unicode:
 				s = s + ",'" + cell + "'"
 			# print cell
 		
 		s = s + ");"
-		# print s.encode("utf-8")
+		print s.encode("utf-8")
 		self.conn.execute(s)
 		self.conn.commit()
 

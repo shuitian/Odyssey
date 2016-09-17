@@ -55,11 +55,19 @@ public class ODUI : MonoBehaviour {
         {
             firstStartPanel.SetActive(flag);
         }
-        //Pokedex.instance.SetStartPokemons();
+        if (flag)
+        {
+            Pokedex.instance.SetStartPokemons();
+        }
     }
 
-    public void SetStartPokemons(ArrayList pokemons)
+    public ODPokemondexItemShow[] startPokemondexItemShows;
+    public void SetStartPokemons(PokedexItem[] pokemons)
     {
-
+        for (int i = 0; i < pokemons.Length && i < startPokemondexItemShows.Length; ++i)
+        {
+            startPokemondexItemShows[i].gameObject.SetActive(true);
+            startPokemondexItemShows[i].SetUIDate(pokemons[i]);
+        }
     }
 }
