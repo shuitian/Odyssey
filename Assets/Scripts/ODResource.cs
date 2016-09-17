@@ -13,7 +13,7 @@ public class ODResource : MonoBehaviour {
         get {
             if(resourceNamesFlag == false)
             {
-                _resourceNames = Sql.GetResourceData();
+                _resourceNames = ODData.GetResourceData();
                 resourceNamesFlag = true;
             }
             return _resourceNames;
@@ -29,7 +29,7 @@ public class ODResource : MonoBehaviour {
 
     static public void SetCurrentResourcesBySql()
     {
-        currentResources = Sql.GetCurrentResources();
+        currentResources = ODData.GetCurrentResources();
         Player.instance.SetCurrentResource(currentResources);
     }
 

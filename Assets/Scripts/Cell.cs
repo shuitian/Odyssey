@@ -71,7 +71,7 @@ public class Cell : MonoBehaviour {
             SetCellType(CellType.Buyed);
             SpaceShip.shipCells[x, y] = (int)CellType.Buyed;
             SpaceShip.ownedCellNum++;
-            Sql.UpdateCell(x, y, CellType.Buyed);
+            ODData.UpdateCell(x, y, CellType.Buyed);
             SpaceShip.instance.MoveCellToBuyedList(gameObject);
             SpaceShip.instance.CreateCellsNearBy(x, y);
             SpaceShip.instance.UpdateAllCellPrice();

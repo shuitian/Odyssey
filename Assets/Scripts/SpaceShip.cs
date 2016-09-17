@@ -18,7 +18,7 @@ public class SpaceShip : MonoBehaviour {
     {
         instance = this;
         canBuyList = new ArrayList();
-        cellPrice = Sql.GetCellPrices();
+        cellPrice = ODData.GetCellPrices();
         initShip();
     }
 
@@ -40,7 +40,7 @@ public class SpaceShip : MonoBehaviour {
     public void initShip()
     {
         ClearExistCells();
-        shipCells = Sql.GetMap();
+        shipCells = ODData.GetMap();
         ownedCellNum = 0;
         for (int i = 0; i < shipSize; ++i)
         {
@@ -140,7 +140,7 @@ public class SpaceShip : MonoBehaviour {
                 {
                     SpaceShip.shipCells[x1, y1] = (int)CellType.CanBuy;
                     CreateCanBuyBorder(x1, y1);
-                    Sql.UpdateCell(x1, y1, CellType.CanBuy);
+                    ODData.UpdateCell(x1, y1, CellType.CanBuy);
                 }
             }
         }

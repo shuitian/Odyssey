@@ -20,7 +20,7 @@ public class PokemonIcon
                 if (loadSprites[index] == null)
                 {
                     string path = "Texture/Pokemons/" + ((index / 100 == 0) ? "0" : "") + ((index / 100 == 0 && (index / 10) % 10 == 0) ? "0" : "") + index;
-                    MonoBehaviour.print(path);
+                    //MonoBehaviour.print(path);
                     loadSprites[index] = Resources.Load<Sprite>(path);
                 }
                 return loadSprites[index];
@@ -88,11 +88,11 @@ public class Pokedex : MonoBehaviour {
     void Awake()
     {
         instance = this;
-        startPokemonsID = Sql.GetStartPokemonsID();
+        startPokemonsID = ODData.GetStartPokemonsID();
         startPokemons = new PokedexItem[startPokemonsID.Count];
         for (int i = 0; i < startPokemonsID.Count; i++) 
         {
-            startPokemons[i] = Sql.GetPokedexItemById((int)startPokemonsID[i]);
+            startPokemons[i] = ODData.GetPokedexItemById((int)startPokemonsID[i]);
         }
     }
 
@@ -108,6 +108,7 @@ public class Pokedex : MonoBehaviour {
         ODGame.isFirstStart = false;
         print("你选择了 " + item.characterName + " 作为你的初始神奇宝贝！");
         ODUI.instance.ShowFirstStartPanel(false);
+        pokemons[item.id] = item;
     }
 }
 

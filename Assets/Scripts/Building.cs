@@ -25,6 +25,6 @@ public class Building : Pokemon
         {
             spriteRenderer.sprite = Pokedex.pokemonIcons[id];
         }
-        Sql.SetPokemonData(this, id);
+        ODData.SetPokemonData(this, id);
     }
 }

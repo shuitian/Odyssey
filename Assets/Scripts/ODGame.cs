@@ -21,9 +21,9 @@ public class ODGame : MonoBehaviour {
     {
         Debug.Log("正在清楚用户信息中，请稍候");
         isFirstStart = true;
-        Sql.ClearPokemons();
-        Sql.ClearSpaceShip();
-        Sql.InitResource();
+        ODData.ClearPokemons();
+        ODData.ClearSpaceShip();
+        ODData.InitResource();
         Application.LoadLevel(Application.loadedLevel);
         Debug.Log("清楚用户信息成功");
     }
@@ -34,32 +34,6 @@ public class ODGame : MonoBehaviour {
         if (isFirstStart)
         {
             ODUI.instance.ShowFirstStartPanel(isFirstStart);
-        }
-    }
-
-    static Dictionary<string, int> _settingDic = new Dictionary<string, int>();
-    static bool settingFlag = false;
-    static public Dictionary<string, int> settingDic
-    {
-        get
-        {
-            if (!settingFlag)
-            {
-                LoadSetting();
-                settingFlag = true;
-            }
-            return _settingDic;
-        }
-    }
-    static void LoadSetting()
-    {
-        TextAsset txt = Resources.Load<TextAsset>("Bytes/setting");
-        JObject jo = (JObject)JsonConvert.DeserializeObject(txt.text);
-        IEnumerable<JProperty> properties = jo.Properties();
-        foreach(JProperty jp in properties)
-        {
-            int value = int.Parse(jp.Value.ToString());
-            _settingDic[jp.Name] = value;
         }
     }
 }
