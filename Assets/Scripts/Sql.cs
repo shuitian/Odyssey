@@ -125,25 +125,34 @@ public class Sql : MonoBehaviour
         return resourceNums;
     }
 
-    static public ArrayList GetPokedex()
-    {
-        ArrayList dex = new ArrayList();
+    //static public ArrayList GetPokedex()
+    //{
+    //    ArrayList dex = new ArrayList();
 
-        //ArrayList pokemons = new ArrayList();
-        //string query = "SELECT id FROM pokemon_upgrate where start_choose = '1'";
-        //reader = ExecuteQuery(query);
-        //while (reader.Read())
-        //{
-        //    pokemons.Add(reader.GetInt32(0));
-        //}
-        //reader.Dispose();
-        return dex;
-    }
+    //    //ArrayList pokemons = new ArrayList();
+    //    //string query = "SELECT id FROM pokemon_upgrate where start_choose = '1'";
+    //    //reader = ExecuteQuery(query);
+    //    //while (reader.Read())
+    //    //{
+    //    //    pokemons.Add(reader.GetInt32(0));
+    //    //}
+    //    //reader.Dispose();
+    //    return dex;
+    //}
 
     static public void ClearPokemons()
     {
         string query = "UPDATE pokemon_dex SET owned = '0'";
         ExecuteNonQuery(query);
+    }
+
+    static public bool IsHavePokemon(int pokemonId)
+    {
+        string query = "SELECT * FROM pokemon_dex where owned = '1' and id = " + pokemonId;
+        reader = ExecuteQuery(query);
+        bool owned = reader.Read();
+        reader.Dispose();
+        return owned;
     }
 
     static public void OwnPokemon(int pokemonId)

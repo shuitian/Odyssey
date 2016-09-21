@@ -48,6 +48,7 @@ public class PokedexItem
     public float damageDerate;
     public float moveSpeed;
 
+    public bool discovery = false;
     public Sprite icon
     {
         get
@@ -88,11 +89,13 @@ public class Pokedex : MonoBehaviour {
     void Awake()
     {
         instance = this;
+        pokemons = (PokedexItem[])ODData.GetPokedex().ToArray(typeof(PokedexItem));
+
         startPokemonsID = ODData.GetStartPokemonsID();
         startPokemons = new PokedexItem[startPokemonsID.Count];
         for (int i = 0; i < startPokemonsID.Count; i++) 
         {
-            startPokemons[i] = ODData.GetPokedexItemById((int)startPokemonsID[i]);
+            startPokemons[i] = pokemons[(int)startPokemonsID[i]-1];
         }
     }
 
@@ -108,7 +111,8 @@ public class Pokedex : MonoBehaviour {
         ODGame.isFirstStart = false;
         print("你选择了 " + item.characterName + " 作为你的初始神奇宝贝！");
         ODUI.instance.ShowFirstStartPanel(false);
-        pokemons[item.id] = item;
+        pokemons[item.id-1].discovery = true;
+        ODData.OwnPokemon(item.id);
     }
 }
 

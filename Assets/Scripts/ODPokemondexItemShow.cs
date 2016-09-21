@@ -17,31 +17,43 @@ public class ODPokemondexItemShow : MonoBehaviour {
     public Text damageDerateText;
     public Text moveSpeedText;
     public Button chooseButton;
-    public void SetUIDate(PokedexItem item)
+    public void SetUIDate(PokedexItem item, bool discoveryMask = true)
     {
+        bool undiscovery = !(discoveryMask || item.discovery);
+        string undiscoveryText = "未知";
         this.item = item;
         if (icon)
+        {
             icon.sprite = item.icon;
+            if (undiscovery)
+            {
+                icon.color = Color.black;
+            }
+            else
+            {
+                icon.color = Color.white;
+            }
+        }
         if (characterNameText)
-            characterNameText.text = item.characterName;
+            characterNameText.text = (undiscovery)?undiscoveryText:item.characterName;
         if (maxHpText)
-            maxHpText.text = item.maxHp + "";
+            maxHpText.text = (undiscovery)?undiscoveryText:item.maxHp + "";
         if (hpRecoverText)
-            hpRecoverText.text = item.hpRecover + "";
+            hpRecoverText.text = (undiscovery)?undiscoveryText:item.hpRecover + "";
         if (attackText)
-            attackText.text = item.attack + "";
+            attackText.text = (undiscovery)?undiscoveryText:item.attack + "";
         if (attackIntervalText)
-            attackIntervalText.text = item.attackInterval + "";
+            attackIntervalText.text = (undiscovery)?undiscoveryText:item.attackInterval + "";
         if (minAttackDisText)
-            minAttackDisText.text = item.minAttackDis + "";
+            minAttackDisText.text = (undiscovery)?undiscoveryText:item.minAttackDis + "";
         if (maxAttackDisText)
-            maxAttackDisText.text = item.maxAttackDis + "";
+            maxAttackDisText.text = (undiscovery)?undiscoveryText:item.maxAttackDis + "";
         if (armorText)
-            armorText.text = item.armor + "";
+            armorText.text = (undiscovery)?undiscoveryText:item.armor + "";
         if (damageDerateText)
-            damageDerateText.text = item.damageDerate + "";
+            damageDerateText.text = (undiscovery)?undiscoveryText:item.damageDerate + "";
         if (moveSpeedText)
-            moveSpeedText.text = item.moveSpeed + "";
+            moveSpeedText.text = (undiscovery)?undiscoveryText:item.moveSpeed + "";
 
         if (chooseButton)
             chooseButton.onClick.AddListener(() => Pokedex.instance.ChooseStartPokemon(item));

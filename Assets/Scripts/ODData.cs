@@ -85,6 +85,7 @@ public class ODData : MonoBehaviour
         SetAttackData(item, int.Parse(ODSetting.pokemonsTable[id]["attack_id"]), int.Parse(ODSetting.pokemonsTable[id]["attackspeed_id"]), int.Parse(ODSetting.pokemonsTable[id]["att_dis_id"]));
         SetHArmorData(item, int.Parse(ODSetting.pokemonsTable[id]["h_armor_id"]));
         SetMoveData(item, int.Parse(ODSetting.pokemonsTable[id]["move_id"]));
+        item.discovery = Sql.IsHavePokemon(id);
         return item;
     }
 
@@ -172,23 +173,29 @@ public class ODData : MonoBehaviour
 
     static public ArrayList GetPokedex()
     {
-        return Sql.GetPokedex();
-    }
-
-    static public ArrayList GetStartPokemons()
-    {
         ArrayList pokemons = new ArrayList();
-        foreach (int id in ODSetting.pokemonUpgrateTable.Keys)
+        foreach (int id in ODSetting.pokemonsTable.Keys)
         {
-            int start_choose = int.Parse(ODSetting.pokemonUpgrateTable[id]["start_choose"]);
-            if (start_choose == 1)
-            {
-                PokedexItem item = GetPokedexItemById(id);
-                pokemons.Add(item);
-            }
+            pokemons.Add(GetPokedexItemById(id));
         }
         return pokemons;
+        //return Sql.GetPokedex();
     }
+
+    //static public ArrayList GetStartPokemons()
+    //{
+    //    ArrayList pokemons = new ArrayList();
+    //    foreach (int id in ODSetting.pokemonUpgrateTable.Keys)
+    //    {
+    //        int start_choose = int.Parse(ODSetting.pokemonUpgrateTable[id]["start_choose"]);
+    //        if (start_choose == 1)
+    //        {
+    //            PokedexItem item = GetPokedexItemById(id);
+    //            pokemons.Add(item);
+    //        }
+    //    }
+    //    return pokemons;
+    //}
 
     static public void ClearPokemons()
     {
