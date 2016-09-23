@@ -5,9 +5,12 @@ using Libgame;
 using Libgame.Components;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using System.IO;
 
 public class Sql : MonoBehaviour
 {
+    static public GameObject text = GameObject.FindGameObjectWithTag("PopUp");
     static SqliteConnection dbConnection;
     static SqliteCommand dbCommand;
     static SqliteDataReader reader;
@@ -26,10 +29,40 @@ public class Sql : MonoBehaviour
         {
             if (dbConnection == null)
             {
+                string dbPath = System.IO.Path.Combine(Application.streamingAssetsPath, dbName);
+#if !UNITY_EDITOR
+                // check if file exists in Application.persistentDataPath
+                var filepath = string.Format("{0}/{1}", Application.persistentDataPath, dbName);
 
-                dbConnection = new SqliteConnection("data source=" + Application.dataPath + "/StreamingAssets/" + dbName);
-                Debug.Log("Connected to db");
-                MonoBehaviour.print("Open " + dbName + " success");
+                if (!File.Exists(filepath))
+                {
+                    Debug.Log("Database not in Persistent path");
+                    // if it doesn't ->
+                    // open StreamingAssets directory and load the db ->
+
+#if UNITY_ANDROID
+                    var loadDb = new WWW(dbPath);
+                    while (!loadDb.isDone) { }  // CAREFUL here, for safety reasons you shouldn't let this while loop unattended, place a timer and error check
+                    // then save to Application.persistentDataPath
+                    File.WriteAllBytes(filepath, loadDb.bytes);
+#else
+	                // then save to Application.persistentDataPath
+	                File.Copy(dbPath, filepath);
+
+#endif
+                    Debug.Log("Database written");
+                }
+
+                dbPath = filepath;
+#endif
+                dbConnection = new SqliteConnection("data source=" + dbPath);
+                if (text)
+                {
+                    text.GetComponent<Text>().text = "Connected to db";
+                }
+                Log.WriteLog("Connected to db:"+ dbPath);
+                //Debug.Log("Connected to db");
+                Log.WriteLog("Open " + dbName + " success");
                 dbConnection.Open();
 
                 return dbConnection;
@@ -42,7 +75,11 @@ public class Sql : MonoBehaviour
         catch (Exception e)
         {
             string temp1 = e.ToString();
-            Debug.Log(temp1);
+            if (text)
+            {
+                text.GetComponent<Text>().text = temp1;
+            }
+            Log.WriteLog(temp1);
             MonoBehaviour.print(temp1);
         }
         return null;
@@ -65,7 +102,7 @@ public class Sql : MonoBehaviour
             dbConnection.Close();
         }
         dbConnection = null;
-        Debug.Log("Disconnected from db.");
+        Log.WriteLog("Disconnected from db.");
         //MonoBehaviour.print("Disconnected from db.");
     }
 

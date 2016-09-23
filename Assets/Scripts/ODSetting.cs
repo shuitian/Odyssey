@@ -52,17 +52,28 @@ public class ODSetting : MonoBehaviour
 
 public class ODTable
 {
+    string path;
     public Dictionary<int,Dictionary<string,string>>.KeyCollection Keys
     {
         get
         {
+            if (!loaded)
+            {
+                tables = LoadTable(path);
+                loaded = true;
+            }
             return tables.Keys;
         }
     }
 
     public IEnumerator<Dictionary<string,string>> GetEnumerator()
     {
-        foreach(var key in tables.Keys)
+        if (!loaded)
+        {
+            tables = LoadTable(path);
+            loaded = true;
+        }
+        foreach (var key in tables.Keys)
         {
             yield return tables[key];
         }
@@ -94,6 +105,11 @@ public class ODTable
     {
         get
         {
+            if (!loaded)
+            {
+                tables = LoadTable(path);
+                loaded = true;
+            }
             if (tables.ContainsKey(index))
             {
                 return tables[index];
@@ -108,11 +124,7 @@ public class ODTable
 
     public ODTable(string path)
     {
-        if (!loaded)
-        {
-            tables = LoadTable(path);
-            loaded = true;
-        }
+        this.path = path;
     }
 }
 

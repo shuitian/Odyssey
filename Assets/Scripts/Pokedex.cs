@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-
+using Libgame;
 public class PokemonIcon
 {
     static bool initFlag = false;
@@ -109,7 +110,7 @@ public class Pokedex : MonoBehaviour {
     public void ChooseStartPokemon(PokedexItem item)
     {
         ODGame.isFirstStart = false;
-        print("你选择了 " + item.characterName + " 作为你的初始神奇宝贝！");
+        Log.WriteLog("你选择了 " + item.characterName + " 作为你的初始神奇宝贝！");
         ODUI.instance.ShowFirstStartPanel(false);
         pokemons[item.id-1].discovery = true;
         ODData.OwnPokemon(item.id);

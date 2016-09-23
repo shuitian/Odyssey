@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Libgame;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,13 +20,13 @@ public class ODGame : MonoBehaviour {
 
     public void ClearPlayerInfo()
     {
-        Debug.Log("正在清楚用户信息中，请稍候");
+        Log.WriteLog("正在清楚用户信息中，请稍候");
         isFirstStart = true;
         ODData.ClearPokemons();
         ODData.ClearSpaceShip();
         ODData.InitResource();
         Application.LoadLevel(Application.loadedLevel);
-        Debug.Log("清楚用户信息成功");
+        Log.WriteLog("清楚用户信息成功");
     }
 
     public GameObject firstStartPanel;
@@ -35,5 +36,10 @@ public class ODGame : MonoBehaviour {
         {
             ODUI.instance.ShowFirstStartPanel(isFirstStart);
         }
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

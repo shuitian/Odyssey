@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using Libgame;
 
@@ -17,6 +18,7 @@ public class PokedexPanel : MonoBehaviour {
 
     public void Show(PokedexItem[] pokemonsList)
     {
+        SetGridItemSize();
         if (firstShowFlag)
         {
             foreach (PokedexItem item in pokemonsList)
@@ -34,5 +36,11 @@ public class PokedexPanel : MonoBehaviour {
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    public GridLayoutGroup grid;
+    public void SetGridItemSize()
+    {
+        grid.cellSize = new Vector2(1.0F / 4 * Screen.width, 4.0F / 5 * Screen.height);
     }
 }
