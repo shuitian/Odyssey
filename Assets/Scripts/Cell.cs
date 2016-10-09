@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
 
 public enum CellType
 {
@@ -22,10 +23,12 @@ public class Cell : MonoBehaviour {
     static public Sprite buyedSprite;
     static public Sprite canBuySprite;
 
+    int _pokemonID = 0;
+
     private float _price = 0;
     void Awake()
     {
-        if(buyedSprite == null)
+        if (buyedSprite == null)
         {
             buyedSprite = Resources.Load<Sprite>("Texture/Buyed");
         }
@@ -71,7 +74,7 @@ public class Cell : MonoBehaviour {
             SetCellType(CellType.Buyed);
             SpaceShip.shipCells[x, y] = (int)CellType.Buyed;
             SpaceShip.ownedCellNum++;
-            ODData.UpdateCell(x, y, CellType.Buyed);
+            ODData.UpdateCell(x, y, (int)CellType.Buyed);
             SpaceShip.instance.MoveCellToBuyedList(gameObject);
             SpaceShip.instance.CreateCellsNearBy(x, y);
             SpaceShip.instance.UpdateAllCellPrice();
@@ -86,7 +89,7 @@ public class Cell : MonoBehaviour {
     public void OnClickCell()
     {
         SpaceShip.currentCell = this;
-        if(cellType == CellType.CanBuy)
+        if (cellType == CellType.CanBuy)
         {
             ODUI.instance.ShowBuyButton(true);
         }
@@ -97,6 +100,8 @@ public class Cell : MonoBehaviour {
         if (cellType == CellType.Buyed)
         {
             ODUI.instance.OnClickShowBuildingButton(true);
+            //ArrayList _pokemons = GetCanEvolutions(_pokemonID);
+            ODUI.instance.SetUpgrateButtonsCallBack(BuildPokemon, GetCanEvolutions(_pokemonID));
         }
         else
         {
@@ -109,5 +114,33 @@ public class Cell : MonoBehaviour {
     {
         _price = price;
         goldText.text = price + "";
+    }
+
+    public void SetPokemon(int pokemonID)
+    {
+        building.sprite = Pokedex.instance[pokemonID - 1].icon;
+        _pokemonID = pokemonID;
+        building.gameObject.SetActive(true);
+        ODData.UpdateCell(x, y, _pokemonID);
+    }
+
+    public void BuildPokemon(int pokemonID)
+    {
+        SetPokemon(pokemonID);
+        ODUI.instance.SetUpgrateButtonsCallBack(BuildPokemon, GetCanEvolutions(pokemonID));
+    }
+
+    public ArrayList GetCanEvolutions(int pokemonID)
+    {
+        ArrayList evolutions = ODData.GetEvolutions(pokemonID);
+        ArrayList pokemons = new ArrayList();
+        foreach(int _pokemonID in evolutions)
+        {
+            if (ODData.IsHavePokemon(_pokemonID))
+            {
+                pokemons.Add(_pokemonID);
+            }
+        }
+        return pokemons;
     }
 }

@@ -15,7 +15,7 @@ public class Sql : MonoBehaviour
     static SqliteCommand dbCommand;
     static SqliteDataReader reader;
     // Use this for initialization
-    static public Dictionary<string,int> setting
+    static public Dictionary<string, int> setting
     {
         get
         {
@@ -60,7 +60,7 @@ public class Sql : MonoBehaviour
                 {
                     text.GetComponent<Text>().text = "Connected to db";
                 }
-                Log.WriteLog("Connected to db:"+ dbPath);
+                Log.WriteLog("Connected to db:" + dbPath);
                 //Debug.Log("Connected to db");
                 Log.WriteLog("Open " + dbName + " success");
                 dbConnection.Open();
@@ -137,14 +137,14 @@ public class Sql : MonoBehaviour
         return map;
     }
 
-    static public void UpdateCell(int x, int y, CellType type)
+    static public void UpdateCell(int x, int y, int type)
     {
-        string query = "UPDATE map SET flag = '" + (int)type + "' where x = '" + x + "' and y = '" + y + "'";
-        print(query);
+        string query = "UPDATE map SET flag = '" + type + "' where x = '" + x + "' and y = '" + y + "'";
+        //print(query);
         ExecuteNonQuery(query);
     }
 
-    static public Dictionary<int,float> GetCurrentResources()
+    static public Dictionary<int, float> GetCurrentResources()
     {
         Dictionary<int, float> resourceNums = new Dictionary<int, float>();
         string query = "SELECT * FROM resources";

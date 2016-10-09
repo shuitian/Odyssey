@@ -56,22 +56,30 @@ public class SpaceShip : MonoBehaviour {
                     {
                         CreateCanBuyBorder(i, j);
                     }
+                    else if (Pokedex.isPokemon(shipCells[i, j]))
+                    {
+                        CreateBuyedBorder(i, j, shipCells[i, j]);
+                    }
                 }
             }
         }
         UpdateAllCellPrice();
     }
 
-    void CreateBuyedBorder(int x, int y)
+    void CreateBuyedBorder(int x, int y, int pokemonID = 0)
     {
         if (buyedListobj)
         {
             GameObject cell = ObjectPool.Instantiate(cellPrefab, new Vector2(x, y), Quaternion.identity, buyedListobj.transform);
             Cell cellComponent = cell.GetComponent<Cell>();
-            cellComponent.SetCellType((CellType)shipCells[x, y]);
+            cellComponent.SetCellType(CellType.Buyed);
             cellComponent.x = x;
             cellComponent.y = y;
 
+            if (pokemonID > 0)
+            {
+                cellComponent.SetPokemon(pokemonID);
+            }
             ownedCellNum++;
         }
     }
@@ -140,7 +148,7 @@ public class SpaceShip : MonoBehaviour {
                 {
                     SpaceShip.shipCells[x1, y1] = (int)CellType.CanBuy;
                     CreateCanBuyBorder(x1, y1);
-                    ODData.UpdateCell(x1, y1, CellType.CanBuy);
+                    ODData.UpdateCell(x1, y1, (int)CellType.CanBuy);
                 }
             }
         }

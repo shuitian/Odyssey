@@ -65,7 +65,7 @@ public class Pokedex : MonoBehaviour {
     {
         get
         {
-            if (index < maxLength)
+            if (isPokemon(index + 1))
             {
                 if(pokemons[index] == null)
                 {
@@ -79,6 +79,11 @@ public class Pokedex : MonoBehaviour {
                 return null;
             }
         }
+    }
+
+    static public bool isPokemon(int index)
+    {
+        return index > 0 && index <= maxLength;
     }
 
     public const int maxLength = 151;

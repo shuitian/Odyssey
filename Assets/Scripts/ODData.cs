@@ -147,7 +147,7 @@ public class ODData : MonoBehaviour
         return prices;
     }
 
-    static public void UpdateCell(int x, int y, CellType type)
+    static public void UpdateCell(int x, int y, int type)
     {
         Sql.UpdateCell(x, y, type);
     }
@@ -206,6 +206,10 @@ public class ODData : MonoBehaviour
     {
         Sql.OwnPokemon(pokemonId);
     }
+    static public bool IsHavePokemon(int pokemonId)
+    {
+        return Sql.IsHavePokemon(pokemonId);
+    }
 
     static public void ClearSpaceShip()
     {
@@ -215,5 +219,19 @@ public class ODData : MonoBehaviour
     static public void InitResource()
     {
         Sql.InitResource();
+    }
+
+    static public ArrayList GetEvolutions(int pokemonID)
+    {
+        ArrayList pokemons = new ArrayList();
+        foreach (int id in ODSetting.pokemonUpgrateTable.Keys)
+        {
+            int building_id = int.Parse(ODSetting.pokemonUpgrateTable[id]["building_id"]);
+            if (building_id == pokemonID)
+            {
+                pokemons.Add(int.Parse(ODSetting.pokemonUpgrateTable[id]["upgrate_id"]));
+            }
+        }
+        return pokemons;
     }
 }
